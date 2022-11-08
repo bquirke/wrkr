@@ -9,6 +9,9 @@ import com.wrkr.addressBook.domain.repository.AddressBookStore;
 import com.wrkr.addressBook.domain.repository.RecordedContactStore;
 import com.wrkr.addressBook.exceptions.AddressBookNotFoundException;
 import com.wrkr.addressBook.exceptions.ContactAlreadyInAddressBookException;
+import com.wrkr.addressBook.web.controllers.AddressBookController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +25,8 @@ import java.util.stream.Collectors;
 @Service
 public class RecordedContactService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(RecordedContactService.class);
+
     @Autowired
     private RecordedContactStore recordedContactStore;
 
@@ -29,6 +34,8 @@ public class RecordedContactService {
     private AddressBookStore addressBookStore;
 
     public void saveNewRecordedContact(Contact contact, Long addressBookId) throws AddressBookNotFoundException, ContactAlreadyInAddressBookException {
+        LOGGER.info("Attempting to save new recorded contact");
+
         Optional<AddressBook> addressBook = addressBookStore.findById(addressBookId);
         if(addressBook.isPresent()){
             //check that the contact isnt already stored in this address book
@@ -49,7 +56,8 @@ public class RecordedContactService {
 
         }
         else {
-            throw new AddressBookNotFoundException("No Address Book with ID " + addressBookId);
+            LOGGER.error("No Address Book with ID {}", addressBookId);
+            throw new AddressBookNotFoundException(String.format("No Address Book with ID %s", addressBookId));
         }
     }
 

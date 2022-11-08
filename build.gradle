@@ -29,6 +29,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation group: 'ch.qos.logback', name: 'logback-classic', version: '0.9.26'
 }
 
 tasks.named('test') {

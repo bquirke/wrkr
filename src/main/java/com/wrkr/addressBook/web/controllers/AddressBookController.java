@@ -13,6 +13,8 @@ import com.wrkr.addressBook.exceptions.NotValidPhoneNumberException;
 import com.wrkr.addressBook.service.ContactService;
 import com.wrkr.addressBook.service.RecordedContactService;
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
@@ -30,6 +32,8 @@ import java.util.Optional;
 @RequestMapping("/")
 public class AddressBookController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AddressBookController.class);
+
     public static final long DEMO_BOOK_TWO_ID = 2l;
     @Autowired
     private RecordedContactService recordedContactService;
@@ -46,6 +50,8 @@ public class AddressBookController {
                       @RequestParam(defaultValue = "contact.userName") String sortBy,
                       @RequestParam(defaultValue = "1000") Integer limit,
                       @RequestParam(defaultValue = "1") Long addressBookId) {
+
+        LOGGER.info("Retrieving contacts on homepage");
 
         List<ContactDTO> toTest = recordedContactService.listBookContacts(page, sortBy, limit, addressBookId);
         model.addAttribute("recordedContacts",
@@ -99,6 +105,8 @@ public class AddressBookController {
             recordedContactService.saveNewRecordedContact(newContact, addressBookId);
 
         }catch (ContactException | ContactAlreadyInAddressBookException e) {
+            LOGGER.error("Error trying to save new recorded contact",e);
+
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/";
         }
@@ -116,6 +124,7 @@ public class AddressBookController {
             redirectAttributes.addFlashAttribute("uniqueContactNames",
                     recordedContactService.getUniqueContactNames(page, limit,addressBookIdOne, addressBookIdTwo));
         } catch (AddressBookNotFoundException e) {
+            LOGGER.error("Error trying to get unique contacts between book with id {} and book with id {}", addressBookIdOne, addressBookIdTwo,e);
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
 
