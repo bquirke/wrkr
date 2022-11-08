@@ -58,6 +58,11 @@ It is a gradle Java 8 Spring Boot application so there are a few different ways 
 ./gradlew bootrun
 ```
 
+You may need to run:
+```shell script
+chmod +x gradlew
+```
+
 To run the tests
 
 ```shell script
