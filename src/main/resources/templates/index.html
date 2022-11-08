@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+   <head>
+      <meta charset = "ISO-8859-1" />
+      <link th:href="@{/css/style.css}" rel = "stylesheet"/>
+      <script type="text/javascript" th:src="@{/js/formValidation.js}"></script>
+      <title>Address Book Application</title>
+   </head>
+   <body>
+
+   <div style="width:100%;">
+      <div style="float:left; width:50%;">
+         <h4>Add contacts to default address book (book 1)</h4>
+
+         <form action="/newContact" name="newContactForm" method="post" onsubmit = "return(validate());">
+            <label for="contactName">Contact Name:</label><br>
+            <input type="text" id="contactName" name="contactName"><br>
+            <label for="phoneNumber">Phone Number (must only contain digits, with no more than 8 digits):</label><br>
+            <input type="number" id="phoneNumber" name="phoneNumber">
+
+            <input type="hidden" name="addressBookId" value="1">
+
+            <input type="submit" value="Submit">
+         </form>
+
+         <div>
+            <span class="errorMessage" th:if="${error != null}" th:text="${error}"></span>
+         </div>
+         <br>
+         <h4>Default Address Book (book 1) List</h4>
+         <table>
+            <tr>
+               <th>Address Book Name</th>
+               <th>Contact Name</th>
+               <th>Contact Phone Number</th>
+            </tr>
+            <tr th:each="record: ${recordedContacts}">
+               <td>Default Address Book</td>
+               <td th:text="${record.userName}" />
+               <td th:text="${record.phoneNumber}" />
+            </tr>
+         </table>
+      </div>
+
+      <br>
+
+      <!-- Unique contacts div-->
+      <div style="float:left; width:50%; margin-left:10px;">
+         <h4>Book 2 for part 3 of problem</h4>
+
+         <table>
+            <tr>
+               <th>Address Book Name</th>
+               <th>Contact Name</th>
+               <th>Contact Phone Number</th>
+            </tr>
+            <tr th:each="record: ${bookTwoContacts}">
+               <td th:text="${bookTwoNameDemo}"/>
+               <td th:text="${record.userName}" />
+               <td th:text="${record.phoneNumber}" />
+            </tr>
+         </table>
+
+         <br>
+
+         <form action="/uniqueContactNames" method="get">
+            <input type="hidden" name="addressBookIdOne" value="1">
+            <input type="hidden" name="addressBookIdTwo" value="2">
+            <button name="subject" type="submit">Show unique contacts between above tables (books)</button>
+         </form>
+
+         <table>
+            <tr>
+               <th>Address Book Name</th>
+               <th>Contact Name</th>
+               <th>Contact Phone Number</th>
+            </tr>
+            <tr th:each="record: ${uniqueContactNames}">
+               <td th:text="${record.addressBook.bookName}"/>
+               <td th:text="${record.contact.userName}" />
+               <td th:text="${record.contact.phoneNumber}" />
+            </tr>
+         </table>
+
+      </div>
+
+   </div>
+
+
+   </body>
+</html>
